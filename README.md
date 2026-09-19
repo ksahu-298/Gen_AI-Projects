@@ -1,887 +1,235 @@
 <div align="center">
 
-# 🧠 Gen_AI Projects
+# 🧠 Gen AI Projects
 
-### Production-Oriented Generative AI Systems
+### Production-oriented Generative AI systems built with Python
 
-<img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=600&size=21&pause=900&color=7B2CBF&center=true&vCenter=true&width=900&height=55&lines=Text-to-SQL+%7C+Production+RAG+%7C+Tool-Using+Agents;Building+GenAI+Systems+with+Guardrails+%26+Evals;From+LLM+Demos+to+Production-Oriented+AI" alt="Typing SVG"/>
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&pause=1200&color=7B2CBF&center=true&vCenter=true&width=750&height=50&lines=Text-to-SQL+%7C+RAG+%7C+AI+Agents;LLMs+with+Guardrails%2C+Tools+%26+Evals;Building+Reliable+GenAI+Systems" alt="Typing SVG"/>
 
 <br/>
 
-<img src="https://img.shields.io/badge/GenAI-7B2CBF?style=for-the-badge"/>
-<img src="https://img.shields.io/badge/LLM%20Applications-2F81F7?style=for-the-badge"/>
-<img src="https://img.shields.io/badge/RAG-00A67E?style=for-the-badge"/>
-<img src="https://img.shields.io/badge/AI%20Agents-E67E22?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white"/>
+<img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white"/>
+<img src="https://img.shields.io/badge/LLM-7B2CBF?style=flat-square"/>
+<img src="https://img.shields.io/badge/RAG-2E8B57?style=flat-square"/>
+<img src="https://img.shields.io/badge/LangGraph-1C1C1C?style=flat-square"/>
+<img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white"/>
 
 </div>
 
 ---
 
-## 🎯 Repository Overview
+## 🚀 About
 
-This repository contains **three production-oriented Generative AI projects** designed around practical business use cases rather than simple LLM demonstrations.
+A collection of **three practical Generative AI projects** focused on building reliable, testable and production-oriented LLM applications.
 
-The projects explore three increasingly capable patterns:
-
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                    GEN AI SYSTEMS                            │
-└─────────────────────────────────────────────────────────────┘
-
-        01                         02                     03
-        │                          │                      │
-        ▼                          ▼                      ▼
-   TEXT → SQL                 PRODUCTION RAG        TOOL-USING AGENT
-        │                          │                      │
-        ▼                          ▼                      ▼
-   Structured Data             Documents            External Tools
-        │                          │                      │
-        ▼                          ▼                      ▼
-   SQL + Results              Cited Answers        Actions + Approval
-        │                          │                      │
-        ▼                          ▼                      ▼
-   Self-Correction             Evals + Refusal      Human-in-the-Loop
-```
-
-### Core engineering themes
-
-* 🔐 **Safety & Guardrails**
-* 📊 **Evaluation & Measurement**
-* 🔄 **Self-Correction**
-* 🔎 **Retrieval & Reranking**
-* 🛠️ **Tool Calling**
-* 👤 **Human-in-the-Loop**
-* 📈 **Observability & Tracing**
-* 🚀 **Deployment & Production Readiness**
+Rather than treating an LLM as a standalone chatbot, these projects explore how to build complete AI systems around it — with **retrieval, tools, validation, evaluation, observability and human oversight**.
 
 ---
 
-# 01 · 🗃️ Text-to-SQL — "Talk to Your Data"
+## 🧩 Projects
 
-### Natural Language → SQL → Results → Visualization → Explanation
-
-> Ask questions about business data in plain English without knowing SQL.
-
-### 💡 Use Case
-
-A business user—such as a category manager at a quick-commerce company—can ask:
-
-> **"Which out-of-stock products have the highest estimated revenue?"**
-
-The system generates the appropriate SQL, executes it safely, presents the result as a table/chart, and explains the answer in plain English.
+| #      | Project                   | Focus                               | Status      |
+| ------ | ------------------------- | ----------------------------------- | ----------- |
+| **01** | 🗃️ **Talk to Your Data** | Natural Language → SQL              | 🚧 Building |
+| **02** | 🔎 **Production RAG Q&A** | Retrieval + Citations + Evals       | 🚧 Building |
+| **03** | 🤖 **Support Agent**      | Tools + Guardrails + Human Approval | 🚧 Building |
 
 ---
 
-## 🔄 Architecture
+### 01 · 🗃️ Talk to Your Data
 
-```text
-             USER QUESTION
-                   │
-                   ▼
-        ┌─────────────────────┐
-        │ Schema Injection    │
-        │ Tables / Columns    │
-        │ Sample Values       │
-        └──────────┬──────────┘
-                   │
-                   ▼
-             ┌─────────┐
-             │   LLM   │
-             └────┬────┘
-                  │
-                  ▼
-           Generated SQL
-                  │
-                  ▼
-        ┌───────────────────┐
-        │ SQL VALIDATOR     │
-        │                   │
-        │ ✓ SELECT only     │
-        │ ✓ Row limit       │
-        │ ✗ DROP            │
-        │ ✗ DELETE          │
-        │ ✗ UPDATE          │
-        └─────────┬─────────┘
-                  │
-                  ▼
-             PostgreSQL
-                  │
-             ┌────┴────┐
-             │         │
-          Success     Error
-             │         │
-             │         ▼
-             │    Error → LLM
-             │         │
-             │         └──► Retry
-             │
-             ▼
-       Result Dataset
-             │
-        ┌────┴─────┐
-        ▼          ▼
-      Table      Chart
-        │          │
-        └────┬─────┘
-             ▼
-       Plain-English
-         Explanation
-```
+**Text-to-SQL assistant for business analytics**
+
+Ask questions in natural language and receive:
+
+`Question → SQL → Results → Chart → Explanation`
+
+**Key engineering features**
+
+* Schema-aware SQL generation
+* Read-only query validation
+* PostgreSQL execution
+* Automatic SQL error correction
+* Query limits and safety controls
+* Evaluation set with known answers
+
+**Stack:** `FastAPI` `PostgreSQL` `LLM API` `Streamlit/React` `Docker`
+
+➡️ **[Explore Project →](./01_Text_to_SQL)**
 
 ---
 
-## 🧠 Key Engineering Features
+### 02 · 🔎 Production RAG Q&A
 
-### 1. Schema-Aware Generation
+**Document-grounded Q&A with citations**
 
-The LLM receives:
+`Documents → Chunking → Hybrid Retrieval → Reranking → LLM → Citations`
 
-* Table names
-* Column names
-* Data types
-* Sample values
+**Key engineering features**
 
-This reduces hallucinated table/column names and improves SQL generation.
+* Fixed vs structure-aware chunking
+* Vector + keyword hybrid search
+* Reranking
+* Page-level citations
+* "I don't know" refusal path
+* Retrieval and faithfulness evaluation
 
-### 2. SQL Safety Layer
+**Stack:** `FastAPI` `ChromaDB/pgvector` `Reranker` `RAGAS` `Docker`
 
-Generated SQL is validated before execution.
-
-```text
-Allowed:
-✓ SELECT
-✓ WITH
-✓ Aggregations
-✓ JOINs
-✓ GROUP BY
-✓ ORDER BY
-
-Blocked:
-✗ DROP
-✗ DELETE
-✗ UPDATE
-✗ INSERT
-✗ ALTER
-✗ TRUNCATE
-```
-
-Additional protection:
-
-* Read-only PostgreSQL user
-* Query row limit
-* Query validation
-* Controlled database access
-
-### 3. Self-Correction Loop
-
-```text
-LLM
- │
- ▼
-SQL
- │
- ▼
-Execute
- │
- ├── SUCCESS ──► Result
- │
- └── ERROR
-       │
-       ▼
-   Error Message
-       │
-       ▼
-      LLM
-       │
-       ▼
-   Corrected SQL
-```
-
-### 4. Evaluation Set
-
-A dedicated evaluation dataset will contain:
-
-**30–50 natural-language questions**
-
-Each question will have:
-
-* Expected SQL
-* Generated SQL
-* Execution result
-* Correctness
-* Failure reason
-
-### 📏 Metrics
-
-> **Execution Accuracy:** `[TO BE MEASURED]`
-
-> **Before schema samples:** `[TO BE MEASURED]`
-
-> **After schema samples:** `[TO BE MEASURED]`
-
-> **Self-correction improvement:** `[TO BE MEASURED]`
-
-**Metrics will only be added after evaluation is actually performed.**
+➡️ **[Explore Project →](./02_Production_RAG)**
 
 ---
 
-## 🛠️ Stack
+### 03 · 🤖 Support Agent
+
+**Tool-using e-commerce support agent**
+
+`Intent → Tools → Guardrails → Human Approval → Response`
+
+**Key engineering features**
+
+* Order lookup
+* Policy retrieval
+* Refund tool
+* LangGraph workflow
+* Human-in-the-loop approval
+* Agent tracing and evaluation
+
+**Stack:** `LangGraph` `FastAPI` `PostgreSQL` `Langfuse` `Docker`
+
+➡️ **[Explore Project →](./03_Support_Agent)**
+
+---
+
+## 🏗️ Engineering Principles
 
 ```text
-FastAPI
-PostgreSQL
-LLM API
-Streamlit / React
-Docker
+             ┌──────────────────────┐
+             │       LLM            │
+             └──────────┬───────────┘
+                        │
+        ┌───────────────┼────────────────┐
+        ▼               ▼                ▼
+   Guardrails        Retrieval          Tools
+        │               │                │
+        └───────────────┼────────────────┘
+                        ▼
+                    Evaluation
+                        │
+                        ▼
+                   Observability
+                        │
+                        ▼
+               Production System
+```
+
+### 🔐 Safety First
+
+Validate model-generated SQL, restrict database permissions and control tool execution.
+
+### 📊 Measure Everything
+
+Every project includes an evaluation strategy instead of relying solely on subjective LLM output.
+
+### 🧪 Design for Failure
+
+Document retrieval failures, invalid SQL, hallucinations, tool errors and unsupported requests.
+
+### 👤 Human Oversight
+
+High-impact actions should have explicit approval boundaries.
+
+### 🚀 Production Mindset
+
+Containerization, environment variables, logging, testing and deployment are part of the design.
+
+---
+
+## 🛠️ Core Technologies
+
+```text
 Python
+├── FastAPI
+├── LangGraph
+├── RAG / Vector Search
+├── LLM APIs
+├── RAGAS
+└── Langfuse
+
+Data
+├── PostgreSQL
+├── ChromaDB / pgvector
+└── SQL
+
+Engineering
+├── Docker
+├── Git / GitHub
+├── Testing
+└── Evaluation
 ```
 
 ---
 
-# 02 · 🔎 Production RAG Q&A with Evals
+## 📈 Evaluation Philosophy
 
-### Ask Questions → Retrieve Evidence → Generate Cited Answers
+Performance numbers will be added **only after measurement**.
 
-> A production-oriented RAG system designed to answer questions from a controlled document collection while refusing to answer when sufficient evidence is unavailable.
+Examples of metrics tracked across the projects:
 
----
-
-## 💡 Use Case
-
-Employees or customers can ask questions over a large document collection such as:
-
-* Company annual reports
-* Insurance policy documents
-* Software documentation
-* Internal knowledge bases
-
-The system returns:
-
-**Answer + Page-Level Citations**
-
-When the required information isn't available:
-
-> **"I don't know based on the provided documents."**
-
----
-
-## 🔄 Architecture
-
-```text
-                  DOCUMENTS
-                      │
-                      ▼
-              ┌──────────────┐
-              │ PDF Ingestion │
-              └──────┬───────┘
-                     │
-                     ▼
-             Document Chunking
-                     │
-             ┌───────┴────────┐
-             │                │
-       Fixed-Size        Structure-Aware
-       Chunking            Chunking
-             │                │
-             └───────┬────────┘
-                     ▼
-                 Embeddings
-                     │
-                     ▼
-              Vector Database
-              ChromaDB/pgvector
-                     │
-                     ▼
-              ┌──────────────┐
-              │ Hybrid Search│
-              │              │
-              │ Keyword      │
-              │ + Vector     │
-              └──────┬───────┘
-                     │
-                     ▼
-                  Reranker
-                     │
-                     ▼
-              Retrieved Context
-                     │
-                     ▼
-                   LLM
-                     │
-              ┌──────┴──────┐
-              ▼             ▼
-          Supported      Unsupported
-              │             │
-              ▼             ▼
-       Cited Answer     "I don't know"
-```
-
----
-
-## 🧠 Key Engineering Features
-
-### 📚 Chunking Comparison
-
-The system evaluates:
-
-**Fixed-size chunking**
-
-vs.
-
-**Structure-aware chunking**
-
-The objective is to measure whether document structure improves retrieval quality.
-
----
-
-### 🔎 Hybrid Retrieval
-
-Combines:
-
-```text
-Keyword Search
-      +
-Vector Search
-      ↓
-Candidate Documents
-      ↓
-Reranking
-      ↓
-Best Context
-```
-
-This allows the system to benefit from both lexical matching and semantic similarity.
-
----
-
-### 📌 Page-Level Citations
-
-Answers are grounded in retrieved document sections and include page-level references.
-
-```text
-Question
-   ↓
-Retrieved Chunks
-   ↓
-LLM Answer
-   ↓
-Citation
-   └──► Document + Page
-```
-
----
-
-### 🛑 Refusal Path
-
-The system should **not manufacture an answer** when the retrieved evidence does not support the question.
-
-```text
-Question
-   │
-   ▼
-Retrieve
-   │
-   ▼
-Sufficient Evidence?
-   │
- ┌─┴─────────┐
-YES          NO
- │            │
- ▼            ▼
-Answer      REFUSE
-+ Citations
-```
-
----
-
-## 📊 Evaluation
-
-A dedicated **50-question evaluation set** will measure:
-
+* SQL execution accuracy
 * Retrieval hit rate
 * Faithfulness
-* Answer quality
 * Citation correctness
-* Refusal behavior
+* Task success rate
+* Tool-call accuracy
+* Guardrail accuracy
+* Latency
+* Failure rate
 
-### Improvement Tracking
-
-| Configuration            | Retrieval Hit Rate |       Faithfulness |
-| ------------------------ | -----------------: | -----------------: |
-| Baseline                 | `[TO BE MEASURED]` | `[TO BE MEASURED]` |
-| Structure-aware chunking | `[TO BE MEASURED]` | `[TO BE MEASURED]` |
-| Hybrid search            | `[TO BE MEASURED]` | `[TO BE MEASURED]` |
-| + Reranking              | `[TO BE MEASURED]` | `[TO BE MEASURED]` |
+> **No fabricated benchmarks. Build → Evaluate → Improve → Measure again.**
 
 ---
 
-## 🔬 Failure Analysis
+## 🔐 Security
 
-The README will document real failure cases discovered during evaluation.
-
-Examples of areas to investigate:
-
-* Poor chunk boundaries
-* Missing context
-* Incorrect retrieval
-* Citation mismatch
-* Hallucinated answers
-* Questions outside the document corpus
-
-**Failures will be documented after testing rather than fabricated beforehand.**
-
----
-
-## 🛠️ Stack
+Secrets and sensitive data are never committed.
 
 ```text
-FastAPI
-ChromaDB / pgvector
-Embedding Model
-Reranker Model
-LLM API
-RAGAS
-Docker
-Python
-```
-
----
-
-# 03 · 🤖 Support Agent with Tools + Human Approval
-
-### Tool-Using AI Agent with Guardrails
-
-> An e-commerce support agent capable of retrieving information, searching policies, initiating refunds, and escalating sensitive actions to humans.
-
----
-
-## 💡 Use Case
-
-The support agent handles:
-
-* 📦 Order-status questions
-* 📋 Return-policy questions
-* 💰 Refund requests
-* ❓ Unknown or unsupported requests
-
-It can use external tools but **doesn't have unrestricted authority**.
-
----
-
-## 🔄 Agent Architecture
-
-```text
-                  USER
-                   │
-                   ▼
-            Intent Classifier
-                   │
-        ┌──────────┼──────────┐
-        ▼          ▼          ▼
-      STATUS     POLICY      REFUND
-        │          │          │
-        ▼          ▼          ▼
-     Order DB    Policy RAG   Refund Tool
-        │          │          │
-        │          │          ▼
-        │          │      Guardrail
-        │          │          │
-        │          │    ┌─────┴─────┐
-        │          │    ▼           ▼
-        │          │  Below       Above
-        │          │  Threshold   Threshold
-        │          │    │           │
-        │          │    ▼           ▼
-        │          │  Execute    HUMAN APPROVAL
-        │          │                │
-        └──────────┴────────────────┘
-                         │
-                         ▼
-                    Final Response
-                         │
-                         ▼
-                       Trace
-```
-
----
-
-## 🧰 Agent Tools
-
-### 📦 Order Lookup
-
-Retrieves order information from PostgreSQL.
-
-### 📚 Policy Search
-
-Uses a small RAG pipeline to retrieve relevant return/refund policies.
-
-### 💰 Refund Tool
-
-Mock API capable of processing refunds subject to business rules.
-
----
-
-## 👤 Human-in-the-Loop
-
-Sensitive actions require human approval.
-
-Example:
-
-```text
-Refund Request
-      │
-      ▼
-Amount < Threshold?
-      │
- ┌────┴─────┐
-YES         NO
- │           │
- ▼           ▼
-Execute    PAUSE
-Refund       │
-             ▼
-      Human Approval
-             │
-       ┌─────┴─────┐
-       ▼           ▼
-    Approved     Rejected
-       │           │
-       ▼           ▼
-    Refund       Escalate
-```
-
-This creates a clear boundary between:
-
-**AI autonomy** and **human authority**.
-
----
-
-## 🧠 LangGraph Workflow
-
-The agent is designed around explicit state transitions rather than a single uncontrolled LLM loop.
-
-```text
-START
-  │
-  ▼
-Intent
-  │
-  ▼
-Tool Selection
-  │
-  ▼
-Tool Execution
-  │
-  ▼
-Guardrail
-  │
-  ├──► Continue
-  │
-  └──► Human Approval
-            │
-            ▼
-         Resume
-            │
-            ▼
-        Response
-            │
-            ▼
-           END
-```
-
----
-
-## 📊 Agent Evaluation
-
-A scripted evaluation suite will contain:
-
-**40–50 conversations**
-
-Testing areas such as:
-
-* Correct intent classification
-* Correct tool selection
-* Accurate order retrieval
-* Correct policy retrieval
-* Refund handling
-* Guardrail enforcement
-* Human escalation
-* Unsupported requests
-
-### Target Metric
-
-> **Task Success Rate:** `[TO BE MEASURED]`
-
-Additional metrics:
-
-* Tool-call accuracy: `[TO BE MEASURED]`
-* Escalation accuracy: `[TO BE MEASURED]`
-* Policy retrieval accuracy: `[TO BE MEASURED]`
-* Failure rate: `[TO BE MEASURED]`
-
----
-
-## 🔭 Observability
-
-Every agent execution should be traceable.
-
-```text
-User Request
-     │
-     ▼
-Intent Classification
-     │
-     ▼
-Tool Selection
-     │
-     ▼
-Tool Input
-     │
-     ▼
-Tool Output
-     │
-     ▼
-Guardrail
-     │
-     ▼
-Final Response
-```
-
-**Langfuse** will be used to inspect traces, identify failures and improve the workflow.
-
----
-
-## 🛠️ Stack
-
-```text
-LangGraph
-FastAPI
-PostgreSQL
-Langfuse
-Docker
-Python
-```
-
-### Optional Extension
-
-```text
-MCP Server
-     │
-     ├── Order Lookup Tool
-     ├── Policy Tool
-     └── Refund Tool
-```
-
----
-
-# 📊 Cross-Project Engineering Principles
-
-All three projects follow the same philosophy:
-
-### 01 — Don't Trust the LLM
-
-LLMs generate outputs.
-
-**Systems validate them.**
-
----
-
-### 02 — Measure Before Claiming
-
-Every project contains an evaluation layer.
-
-```text
-Build
-  ↓
-Test
-  ↓
-Measure
-  ↓
-Identify Failure
-  ↓
-Improve
-  ↓
-Measure Again
-```
-
-No performance metric is added to the README until it has actually been measured.
-
----
-
-### 03 — Design for Failure
-
-Each project explicitly considers failure:
-
-| Project       | Failure Handling               |
-| ------------- | ------------------------------ |
-| Text-to-SQL   | SQL validation + retry         |
-| RAG           | Retrieval evaluation + refusal |
-| Support Agent | Guardrails + human approval    |
-
----
-
-### 04 — Keep Secrets Out of Git
-
-Sensitive credentials are never committed.
-
-```text
-.env
-.env.local
-secrets/
-*.pem
-*.key
-```
-
-Use environment variables for:
-
-* API keys
-* Database credentials
-* Application secrets
-* Deployment configuration
-
----
-
-# 🔐 Security Checklist
-
-```text
-✓ Environment variables for secrets
-✓ .gitignore configured
-✓ No real customer/patient/company data
-✓ Read-only DB access where possible
-✓ SQL query validation
-✓ Query limits
+✓ .env / environment variables
+✓ .env.example
+✓ .gitignore
+✓ Read-only database access
+✓ Query validation
 ✓ Tool authorization
-✓ Human approval for sensitive actions
-✓ Logging without exposing secrets
+✓ No real customer data
 ```
 
 ---
 
-# 🐳 Deployment
+## 🗺️ Roadmap
 
-Each project is designed to be containerized.
-
-```text
-Application
-     │
-     ▼
-  Docker
-     │
- ┌───┴─────────────┐
- ▼                 ▼
-Backend          Database
- │                 │
- ▼                 ▼
-API / UI       PostgreSQL
-```
-
-### Deployment Status
-
-| Project        | Status      | Live Demo    |
-| -------------- | ----------- | ------------ |
-| Text-to-SQL    | 🚧 Building | `[ADD LINK]` |
-| Production RAG | 🚧 Building | `[ADD LINK]` |
-| Support Agent  | 🚧 Building | `[ADD LINK]` |
-
-> Live URLs will be added after successful deployment and testing.
-
----
-
-# 📁 Repository Structure
-
-```text
-Gen_AI-Projects/
-│
-├── 01_Text_to_SQL/
-│   ├── app/
-│   ├── database/
-│   ├── evaluation/
-│   ├── frontend/
-│   ├── tests/
-│   ├── Dockerfile
-│   ├── .env.example
-│   ├── .gitignore
-│   └── README.md
-│
-├── 02_Production_RAG/
-│   ├── app/
-│   ├── ingestion/
-│   ├── retrieval/
-│   ├── evaluation/
-│   ├── documents/
-│   ├── tests/
-│   ├── Dockerfile
-│   ├── .env.example
-│   ├── .gitignore
-│   └── README.md
-│
-├── 03_Support_Agent/
-│   ├── agent/
-│   ├── tools/
-│   ├── rag/
-│   ├── evaluation/
-│   ├── traces/
-│   ├── tests/
-│   ├── Dockerfile
-│   ├── .env.example
-│   ├── .gitignore
-│   └── README.md
-│
-└── README.md
-```
-
----
-
-# 🗺️ Project Roadmap
-
-```text
-                    GEN AI PORTFOLIO
-                           │
-          ┌────────────────┼────────────────┐
-          ▼                ▼                ▼
-      TEXT-to-SQL        RAG             AGENTS
-          │                │                │
-          ▼                ▼                ▼
-       Safety          Retrieval          Tools
-          │                │                │
-          ▼                ▼                ▼
-     Self-Correction     Evals          Guardrails
-          │                │                │
-          ▼                ▼                ▼
-      Analytics        Citations       Human Approval
-          │                │                │
-          └────────────────┼────────────────┘
-                           ▼
-                 PRODUCTION GENAI
-```
-
----
-
-## 🚀 Future Improvements
-
-* [ ] Deploy all three projects
-* [ ] Complete automated evaluation suites
-* [ ] Add CI/CD pipelines
-* [ ] Add structured application logging
-* [ ] Add latency and cost tracking
-* [ ] Add authentication where required
-* [ ] Add automated regression tests
-* [ ] Add MCP integration to the support agent
-* [ ] Compare multiple LLM providers/models
+* [ ] Build Text-to-SQL system
+* [ ] Create SQL evaluation dataset
+* [ ] Build production RAG pipeline
+* [ ] Add retrieval evaluation
+* [ ] Build LangGraph support agent
+* [ ] Implement human approval workflow
+* [ ] Add Langfuse tracing
+* [ ] Containerize applications
+* [ ] Deploy projects
 * [ ] Publish evaluation results
-* [ ] Document production failure cases
 
 ---
 
 <div align="center">
 
-## 🧠 From LLM Demos to Reliable AI Systems
+### ⚡ Build. Evaluate. Improve.
 
-**Safety • Retrieval • Tools • Evaluation • Observability • Human Oversight**
+**Turning LLM capabilities into reliable AI systems.**
 
 <br/>
 
-⭐ **Built by Karan Sahu**
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:7B2CBF,100:06B6D4&height=100&section=footer" width="100%"/>
 
 </div>
-
