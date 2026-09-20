@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talk to Your Data | Text-to-SQL Analytics Assistant</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons & Chart.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header / Navbar -->
+        <header class="app-header">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>Talk to Your Data</h1>
+                    <span class="sub-title">Natural Language SQL Analytics Assistant</span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-outline" id="btn-open-schema">
+                    <i class="fa-solid fa-sitemap"></i> Schema Explorer
+                </button>
+                <button class="btn btn-outline" id="btn-run-eval">
+                    <i class="fa-solid fa-vial"></i> Run Evals
+                </button>
+                <div class="status-pill" id="db-status-pill">
+                    <span class="status-dot"></span> <span id="db-type-label">PostgreSQL</span>
+                </div>
+                <div class="status-pill provider-pill" id="provider-pill">
+                    <i class="fa-solid fa-brain"></i> <span id="provider-label">Gemini 2.5 Flash</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Search & Input Card -->
+            <section class="search-card card">
+                <div class="search-header">
+                    <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Ask an Analytical Question</h2>
+                    <span class="hint">Translate plain English directly into validated SQL queries</span>
+                </div>
+                <div class="input-wrapper">
+                    <textarea id="query-input" placeholder="e.g. Which out-of-stock products have the highest estimated revenue?" rows="2"></textarea>
+                    <button id="btn-submit-query" class="btn btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Ask AI
+                    </button>
+                </div>
+                <!-- Sample Question Pills -->
+                <div class="sample-queries-container">
+                    <span class="sample-label">Try these sample queries:</span>
+                    <div class="pills-wrapper" id="pills-wrapper">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading Spinner State -->
+            <div class="loading-state hidden" id="loading-state">
+                <div class="spinner"></div>
+                <p id="loading-text">Analyzing Database Schema & Generating SQL...</p>
+            </div>
+
+            <!-- Pipeline Response Area -->
+            <div class="response-container hidden" id="response-container">
+                <!-- Summary Metrics Bar -->
+                <section class="metrics-bar">
+                    <div class="metric-item">
+                        <span class="metric-label">Total Latency</span>
+                        <span class="metric-val" id="metric-total-ms">0 ms</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">SQL Execution Time</span>
+                        <span class="metric-val" id="metric-exec-ms">0 ms</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Rows Returned</span>
+                        <span class="metric-val" id="metric-row-count">0</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">AST Safety Guardrail</span>
+                        <span class="metric-badge success" id="metric-ast-badge"><i class="fa-solid fa-shield-halved"></i> AST Verified</span>
+                    </div>
+                    <div class="metric-item hidden" id="self-correction-item">
+                        <span class="metric-label">Self-Correction</span>
+                        <span class="metric-badge warning" id="self-correction-badge"><i class="fa-solid fa-wrench"></i> Repaired</span>
+                    </div>
+                </section>
+
+                <!-- Plain English Executive Explanation -->
+                <section class="explanation-card card" id="explanation-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-lightbulb"></i> Executive Insight</h3>
+                    </div>
+                    <p id="explanation-text" class="explanation-body">Analysis completed successfully.</p>
+                </section>
+
+                <!-- Multi-Tab Results Deck -->
+                <section class="results-deck card">
+                    <div class="tab-bar">
+                        <button class="tab-btn active" data-tab="tab-visualization"><i class="fa-solid fa-chart-column"></i> Visualization</button>
+                        <button class="tab-btn" data-tab="tab-table"><i class="fa-solid fa-table"></i> Data Table</button>
+                        <button class="tab-btn" data-tab="tab-sql"><i class="fa-solid fa-code"></i> Generated SQL</button>
+                        <button class="tab-btn" data-tab="tab-pipeline"><i class="fa-solid fa-diagram-project"></i> Pipeline Trace</button>
+                    </div>
+
+                    <!-- Tab 1: Visualization -->
+                    <div class="tab-pane active" id="tab-visualization">
+                        <div class="chart-wrapper">
+                            <canvas id="analyticsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Data Table -->
+                    <div class="tab-pane" id="tab-table">
+                        <div class="table-actions">
+                            <span class="rows-info" id="table-rows-info">Showing 0 results</span>
+                            <button class="btn btn-sm btn-outline" id="btn-export-csv"><i class="fa-solid fa-download"></i> Export CSV</button>
+                        </div>
+                        <div class="table-scroll">
+                            <table class="data-table" id="data-table">
+                                <thead id="table-head"></thead>
+                                <tbody id="table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Generated SQL -->
+                    <div class="tab-pane" id="tab-sql">
+                        <div class="code-header">
+                            <span class="code-title"><i class="fa-solid fa-terminal"></i> Validated Read-Only SQL Query</span>
+                            <button class="btn btn-sm btn-outline" id="btn-copy-sql"><i class="fa-solid fa-copy"></i> Copy SQL</button>
+                        </div>
+                        <pre class="code-block"><code id="sql-code-display">SELECT * FROM products;</code></pre>
+                    </div>
+
+                    <!-- Tab 4: Pipeline Trace -->
+                    <div class="tab-pane" id="tab-pipeline">
+                        <div class="pipeline-stepper" id="pipeline-stepper">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Schema Explorer Modal -->
+    <div class="modal-overlay hidden" id="schema-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-sitemap"></i> Database Schema Explorer</h3>
+                <button class="modal-close" id="btn-close-schema">&times;</button>
+            </div>
+            <div class="modal-body" id="schema-modal-body">
+                <!-- Schema tables inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Evaluation Modal -->
+    <div class="modal-overlay hidden" id="eval-modal">
+        <div class="modal-card modal-lg">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-vial-circle-check"></i> Benchmark Evaluation Report</h3>
+                <button class="modal-close" id="btn-close-eval">&times;</button>
+            </div>
+            <div class="modal-body" id="eval-modal-body">
+                <!-- Eval stats inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
