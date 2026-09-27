@@ -5,8 +5,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-DATA_FILE_PATH = str(PROJECT_ROOT / "data" / "hr_policy.txt")
-VECTOR_STORE_PATH = str(PROJECT_ROOT / "data" / "faiss_index")
+
 
 load_dotenv()
 
@@ -17,9 +16,9 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 JINA_API_KEY = os.getenv("JINA_API_KEY")
 
 # Data directory path and vector store path
-DATA_FILE_PATH = os.path.join("data", "hr_policy.txt")
+DATA_FILE_PATH = str(PROJECT_ROOT / "data" / "hr_policy.txt")
 
-VECTOR_STORE_PATH = os.path.join("data", "faiss_index")
+VECTOR_STORE_PATH = str(PROJECT_ROOT / "data" / "faiss_index")
 
 # Model names for LLM and embeddings
 LLM_MODEL_NAME = "openai/gpt-oss-20b"
