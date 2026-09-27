@@ -1,6 +1,12 @@
 import os
 from dotenv import load_dotenv
 
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+DATA_FILE_PATH = str(PROJECT_ROOT / "data" / "hr_policy.txt")
+VECTOR_STORE_PATH = str(PROJECT_ROOT / "data" / "faiss_index")
 
 load_dotenv()
 
