@@ -1,3 +1,4 @@
+import html
 import re
 import time
 from datetime import datetime
@@ -87,11 +88,27 @@ header[data-testid="stHeader"] { background: transparent; }
 /* Chat */
 [data-testid="stChatMessage"] { border-radius: 16px; padding: 1rem 1.15rem; margin-bottom: .7rem;
     background: #fff; border: 1px solid #DDE4EA; }
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) { background: #1F6F78; border-color: #1F6F78; }
-[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) p { color: #fff; }
-[data-testid="stChatInput"] { border-radius: 14px; border: 1px solid #C9D5DE; }
+[data-testid="stChatMessage"],
+[data-testid="stChatMessage"] :is(p, li, span, strong, em, label, summary, h1, h2, h3, td, th) { color: #14263A; }
+[data-testid="stChatMessage"] .user-bubble { display: inline-block; background: #1F6F78; color: #fff;
+    border-radius: 14px; padding: .55rem .9rem; white-space: pre-wrap; line-height: 1.5; }
+[data-testid="stChatMessage"] .meta { color: #6B7F90; }
+[data-testid="stChatInput"] { border-radius: 14px; border: 1px solid #C9D5DE; background: #fff; }
+[data-testid="stChatInput"] textarea { color: #14263A; background: #fff; }
+[data-testid="stChatInput"] textarea::placeholder { color: #6B7F90; }
 [data-testid="stChatInput"]:focus-within { border-color: #1F6F78; }
-.meta { color: #6B7F90; font-size: .78rem; margin-top: .3rem; }
+.meta { font-size: .78rem; margin-top: .3rem; }
+
+/* Keep the app light even when the browser or Streamlit is in dark mode */
+.stApp { background: #F2F5F8; color: #14263A; }
+[data-testid="stBottom"] > div, [data-testid="stBottomBlockContainer"] { background: #F2F5F8; }
+[data-testid="stSidebar"] { background: #E7EDF2; }
+[data-testid="stCaptionContainer"], .stCaption, .stApp .stMarkdown p { color: #3F556A; }
+.stButton > button p, .stDownloadButton > button p { color: #14263A; }
+.stButton > button[kind="primary"] p { color: #fff; }
+.stDownloadButton > button { border-radius: 12px; border: 1px solid #DDE4EA; background: #fff; }
+.stApp .hero p { color: rgba(255,255,255,.82); }
+.stApp .stMarkdown p.section-title, .stApp .stMarkdown p.side-title { color: #14263A; }
 
 /* Sidebar */
 .side-title { font-weight: 800; font-size: 1.02rem; color: #14263A; margin: 0 0 .5rem; }
@@ -172,21 +189,27 @@ def chat_as_text() -> str:
     return "\n".join(lines)
 
 
+def show_user(text: str):
+    st.markdown(f'<div class="user-bubble">{html.escape(text)}</div>', unsafe_allow_html=True)
+
+
 def render_history():
     for i, m in enumerate(st.session_state.messages):
         with st.chat_message(m["role"], avatar=AVATARS[m["role"]]):
+            if m["role"] == "user":
+                show_user(m["content"])
+                continue
             st.markdown(m["content"])
-            if m["role"] == "assistant":
-                st.markdown(f'<div class="meta">Answered in {m["secs"]:.1f}s at {m["ts"]}</div>',
-                            unsafe_allow_html=True)
-                if hasattr(st, "feedback"):
-                    st.feedback("thumbs", key=f"feedback_{i}")
+            st.markdown(f'<div class="meta">Answered in {m["secs"]:.1f}s at {m["ts"]}</div>',
+                        unsafe_allow_html=True)
+            if hasattr(st, "feedback"):
+                st.feedback("thumbs", key=f"feedback_{i}")
 
 
 def handle_question(agent, question: str):
     st.session_state.messages.append({"role": "user", "content": question})
     with st.chat_message("user", avatar=AVATARS["user"]):
-        st.markdown(question)
+        show_user(question)
 
     with st.chat_message("assistant", avatar=AVATARS["assistant"]):
         start = time.perf_counter()
