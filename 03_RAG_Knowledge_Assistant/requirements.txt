@@ -7,3 +7,5 @@ langchain-pinecone>=0.2.0
 pinecone-client>=5.0.0
 pypdf>=4.0.0
 fpdf2>=2.7.0
+python-dotenv>=1.0.0
+streamlit>=1.35.0
