@@ -9,13 +9,10 @@ from dotenv import load_dotenv
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-# os.environ["NVIDIA_API_KEY"] = os.getenv("NVIDIA_API_KEY")
-# os.environ["PINECONE_API_KEY"] = os.getenv("PINECONE_API_KEY")
 for key in ("NVIDIA_API_KEY", "PINECONE_API_KEY"):
     if not os.getenv(key):
         raise ValueError(f"{key} is missing; check your .env file")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 
 INDEX_NAME = "knowledge-assistant"
