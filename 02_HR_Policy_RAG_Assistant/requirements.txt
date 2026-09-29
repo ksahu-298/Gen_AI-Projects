@@ -18,3 +18,4 @@ streamlit
 
 #load env
 python-dotenv
+faiss-cpu

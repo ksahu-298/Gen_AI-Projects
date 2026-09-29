@@ -1,6 +1,9 @@
 import streamlit as st
 
 from hr_assistant.pipeline import build_hr_assistant, ask
+from hr_assistant.logger import get_logger
+
+logger = get_logger(__name__)
 
 st.set_page_config(page_title="HR Policy RAG Assistant", page_icon=":robot_face:")
 st.title("HR Policy RAG Assistant")
@@ -23,6 +26,7 @@ for message in st.session_state.messages:
 #get new message from user
 question = st.chat_input("Ask a question about HR policies...")
 if question:
+    logger.info("=== Streamlit run: new question reeived ===")
     st.session_state.messages.append({"role": "user", "content": question})
     with st.chat_message("user"):
         st.markdown(question)
